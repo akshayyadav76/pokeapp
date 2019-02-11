@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:pokeapp/pokemon.dart';
+import 'package:pokeapp/pokemondeatils.dart';
 
 
 void main(){
@@ -43,6 +44,9 @@ class HomePageState extends State<HomePage> {
     pokeHub = PokeHub.fromJson(decodevalue);
 
     print(pokeHub);
+    setState(() {
+
+    });
 
 
   }
@@ -53,17 +57,27 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
 
       appBar: AppBar(title: Text("poke app"),),
-      body: GridView.count(crossAxisCount: 2,children: pokeHub.pokemon.map((Pokemon poke) => Padding(padding: const EdgeInsets.all(2.0),child: Card(
-        elevation:  5.0,
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 100.0,
-              width:  100.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(image: NetworkImage(poke.img))),
-            )
-          ],
+      body: pokeHub == null ? Center(child: CircularProgressIndicator(),): GridView.count(crossAxisCount: 2,children: pokeHub.pokemon.map((Pokemon poke) => Padding(padding: const EdgeInsets.all(2.0),  child: InkWell(
+        onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => PokeDetail(
+          pokemon: poke,
+        )));},
+        child: Hero(
+          tag: poke.img,
+          child: Card(
+
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: 100.0,
+                  width:  100.0,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: NetworkImage(poke.img))),),
+                Text(poke.name,style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold,),)
+              ],
+            ),
+          ),
         ),
       ),)).toList() ,),
       drawer: Drawer(),
